@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Monthly</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f6f9fc;
+  --white: #ffffff;
+  --sidebar-bg: #ffffff;
+  --sidebar-w: 220px;
+  --border: #e3e8ef;
+  --border-light: #edf2f7;
+  --text: #0a2540;
+  --text-muted: #425466;
+  --text-light: #8898aa;
+  --blue: #5469d4;
+  --blue-light: #eef1ff;
+  --blue-hover: #4a5fc1;
+  --green: #09825d;
+  --green-bg: #d3f8ee;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --teal: #0e7490;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 2px 8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ── */
+.app { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.brand-icon {
+  width: 28px; height: 28px;
+  background: var(--blue);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.sidebar-nav { padding: 8px 10px; flex: 1; }
+
+.nav-section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  padding: 12px 10px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  text-decoration: none;
+  margin-bottom: 1px;
+}
+
+.nav-item:hover { background: var(--bg); color: var(--text); }
+
+.nav-item.active {
+  background: var(--blue-light);
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.nav-icon { width: 16px; height: 16px; opacity: 0.6; flex-shrink: 0; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-footer {
+  padding: 12px 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.topbar-breadcrumb {
+  font-size: 13px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+/* ── CONTENT AREA ── */
+.content {
+  padding: 32px;
+  max-width: 820px;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; animation: fadeUp 0.25s ease; }
+.screen.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PAGE TITLE ── */
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* ── FORM ── */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.field-label .opt { color: var(--text-light); font-weight: 400; }
+
+input[type="text"],
+select {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  appearance: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(84,105,212,0.12);
+}
+
+input::placeholder { color: var(--text-light); }
+
+.input-prefix-wrap {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input-prefix-wrap:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(84,105,212,0.12);
+}
+
+.input-prefix {
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.input-prefix-wrap input {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  flex: 1;
+}
+
+.input-prefix-wrap input:focus { box-shadow: none; }
+
+/* SELECT with arrow */
+.select-wrap { position: relative; }
+
+.select-wrap select { padding-right: 32px; }
+
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--text-light);
+  pointer-events: none;
+}
+
+/* ── FREQ TOGGLE ── */
+.freq-row { display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+
+.freq-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: var(--white);
+  color: var(--text-muted);
+  font-family: inherit;
+  border-right: 1px solid var(--border);
+  transition: background 0.1s, color 0.1s;
+}
+
+.freq-btn:last-child { border-right: none; }
+.freq-btn:hover { background: var(--bg); color: var(--text); }
+
+.freq-btn.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ── UPLOAD ── */
+.upload-zone {
+  border: 1.5px dashed var(--border);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.upload-zone:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+
+.upload-icon-wrap {
+  width: 36px; height: 36px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.upload-label { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.upload-hint { font-size: 12.5px; color: var(--text-light); margin-bottom: 14px; }
+
+.upload-trust {
+  font-size: 12px;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* ── EXTRACTED ── */
+.extracted-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.ex-row:last-child { border-bottom: none; }
+
+.ex-key { font-size: 13px; color: var(--text-muted); }
+.ex-val { font-size: 13px; font-weight: 500; color: var(--text); }
+
+/* ── PILLS / BADGES ── */
+.pill-green {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--green);
+  background: var(--green-bg);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.pill-blue {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--blue);
+  background: var(--blue-light);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.pill-amber {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #92400e;
+  background: #fef3c7;
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* ── TOGGLE ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.toggle-text .t1 { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.toggle-text .t2 { font-size: 12.5px; color: var(--text-muted); }
+
+.toggle-switch {
+  width: 40px; height: 22px;
+  background: var(--blue);
+  border-radius: 20px;
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  right: 3px; top: 3px;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.btn-primary:hover { background: var(--blue-hover); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+.btn-primary:active { transform: scale(0.99); }
+.btn-primary.full { width: 100%; }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.1s;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover { background: var(--bg); }
+.btn-secondary.full { width: 100%; }
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* ── SCREEN 2 ── */
+.result-hero {
+  text-align: center;
+  padding: 36px 32px 32px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 0;
+}
+
+.hero-icon {
+  width: 52px; height: 52px;
+  background: var(--green-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+}
+
+.hero-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+}
+
+.hero-amount {
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -1.5px;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.hero-eta {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.breakdown { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+
+.b-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--white);
+}
+
+.b-row:last-child { border-bottom: none; }
+
+.b-row.b-total { background: #f7f9ff; }
+
+.b-label { font-size: 13.5px; color: var(--text-muted); }
+.b-val { font-size: 14px; font-weight: 500; color: var(--text); }
+
+.b-row.b-total .b-label { color: var(--text); font-weight: 500; }
+.b-row.b-total .b-val { font-size: 16px; color: var(--blue); }
+
+.buyer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+}
+
+.buyer-amount { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.buyer-label { font-size: 12.5px; color: var(--text-muted); }
+
+/* ── SCREEN 3 ── */
+.success-center {
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.success-icon {
+  width: 60px; height: 60px;
+  background: var(--green-bg);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.success-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.success-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.amount-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+  background: var(--blue-light);
+  border: 1px solid rgba(84,105,212,0.15);
+  border-radius: var(--radius);
+  padding: 5px 14px;
+  margin-bottom: 32px;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.t-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.t-step:last-child { border-bottom: none; }
+
+.t-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.t-icon.done { background: var(--green-bg); }
+.t-icon.active { background: var(--blue-light); }
+
+.t-label {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.t-label.active { color: var(--text); }
+
+.t-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.t-badge-done {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--green);
+  background: var(--green-bg);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.t-badge-active {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--blue);
+  background: var(--blue-light);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.pulse { animation: pulse 2s ease-in-out infinite; }
+
+/* ── SECTION ROW ── */
+.section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+hr.divider {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 24px 0;
+}
+
+/* ── NOTICE ── */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--blue-light);
+  border: 1px solid rgba(84,105,212,0.18);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-top: 16px;
+}
+
+.notice-text { font-size: 13px; color: var(--blue); line-height: 1.5; }
+.notice-icon { flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-icon">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 10l5-7 5 7" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">Monthly</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="goTo('screen1')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" fill="currentColor"/><rect x="9" y="2" width="5" height="5" rx="1" fill="currentColor" opacity="0.4"/><rect x="2" y="9" width="5" height="5" rx="1" fill="currentColor" opacity="0.4"/><rect x="9" y="9" width="5" height="5" rx="1" fill="currentColor" opacity="0.4"/></svg>
+        Overview
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 5h12M2 8h8M2 11h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Contracts
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5.5v3l2 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Payouts
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12V7l6-4 6 4v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="5.5" y="9" width="5" height="7" rx="0.5" stroke="currentColor" stroke-width="1.4"/></svg>
+        Buyers
+      </div>
+
+      <div class="nav-section-label">Finance</div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12l3-4 3 2 3-5 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Reports
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="6" r="3.5" stroke="currentColor" stroke-width="1.4"/><path d="M9 9l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Underwriting
+      </div>
+
+      <div class="nav-section-label">Account</div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M3 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Team
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="nav-item" style="margin:0;">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        New contract
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- TOPBAR S1 -->
+    <header class="topbar" id="topbar-s1" style="display:flex">
+      <div class="topbar-left">
+        <span class="topbar-title">New Contract</span>
+        <span style="color:var(--border);font-size:18px;">/</span>
+        <span class="topbar-breadcrumb">Upload</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-secondary" style="font-size:13px;padding:7px 14px;">Save draft</button>
+      </div>
+    </header>
+
+    <!-- TOPBAR S2 -->
+    <header class="topbar" id="topbar-s2" style="display:none">
+      <div class="topbar-left">
+        <span class="topbar-title">Underwriting Result</span>
+        <span style="color:var(--border);font-size:18px;">/</span>
+        <span class="topbar-breadcrumb">Acme Corp — €20,000</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="pill-green"><span>●</span> Approved</span>
+      </div>
+    </header>
+
+    <!-- TOPBAR S3 -->
+    <header class="topbar" id="topbar-s3" style="display:none">
+      <div class="topbar-left">
+        <span class="topbar-title">Contract Funded</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-primary" style="font-size:13px;padding:7px 14px;" onclick="goTo('screen1')">+ New contract</button>
+      </div>
+    </header>
+
+    <!-- ────────────────────────────────────────
+         SCREEN 1
+    ──────────────────────────────────────── -->
+    <div class="content">
+      <div class="screen active" id="screen1">
+        <p class="page-title">Upload Contract</p>
+        <p class="page-sub">Turn this agreement into upfront cash in minutes.</p>
+
+        <div class="card">
+          <p class="card-title">Buyer information</p>
+          <div class="grid2">
+            <div class="field">
+              <label class="field-label">Buyer company name</label>
+              <input type="text" placeholder="Acme Corp" value="Acme Corp" />
+            </div>
+            <div class="field">
+              <label class="field-label">Website <span class="opt">(optional)</span></label>
+              <input type="text" placeholder="acme.com" value="acme.com" />
+            </div>
+            <div class="field">
+              <label class="field-label">Contract value</label>
+              <div class="input-prefix-wrap">
+                <span class="input-prefix">€</span>
+                <input type="text" placeholder="0.00" value="20,000" />
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label">Contract term</label>
+              <div class="select-wrap">
+                <select>
+                  <option selected>12 months</option>
+                  <option>24 months</option>
+                  <option>36 months</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px;">
+            <label class="field-label">Billing frequency</label>
+            <div style="margin-top:4px;">
+              <div class="freq-row" style="display:inline-flex;">
+                <button class="freq-btn active" onclick="setFreq(this)">Monthly</button>
+                <button class="freq-btn" onclick="setFreq(this)">Quarterly</button>
+                <button class="freq-btn" onclick="setFreq(this)">Annually</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="card-title">Contract document</p>
+          <div class="upload-zone" onclick="simulateUpload(this)">
+            <div class="upload-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1.5v9M4.5 5l3.5-3.5L11.5 5M1.5 13.5h13" stroke="#5469d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="upload-label" id="upload-label">Drag & drop or click to upload</p>
+            <p class="upload-hint" id="upload-hint">PDF, DOCX, or signed agreement · Max 25 MB</p>
+            <div class="upload-trust">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <rect x="1" y="4" width="9" height="6" rx="1.5" stroke="#8898aa" stroke-width="1"/>
+                <path d="M3.5 4V3a2 2 0 014 0v1" stroke="#8898aa" stroke-width="1"/>
+              </svg>
+              Used for underwriting only — never shared externally
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-row">
+            <p class="card-title" style="margin:0;padding:0;border:none;">Auto-extracted fields</p>
+            <span class="pill-blue">Auto-extracted</span>
+          </div>
+          <div class="extracted-box">
+            <div class="ex-row">
+              <span class="ex-key">Start date</span>
+              <span class="ex-val">February 1, 2025</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-key">End date</span>
+              <span class="ex-val">January 31, 2026</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-key">Buyer signatory</span>
+              <span class="ex-val">Sarah Mitchell, CFO</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toggle-row">
+            <div class="toggle-text">
+              <p class="t1">Get Paid Upfront</p>
+              <p class="t2">You receive the full annual contract value immediately. Your buyer pays monthly.</p>
+            </div>
+            <div class="toggle-switch" style="margin-left:24px;"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-secondary" onclick="">← Back</button>
+            <button class="btn-primary" onclick="goTo('screen2')">Continue to underwriting →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────────────────────────────────────────
+           SCREEN 2
+      ──────────────────────────────────────── -->
+      <div class="screen" id="screen2">
+        <p class="page-title">Underwriting Result</p>
+        <p class="page-sub">Review your offer below and accept to initiate funding.</p>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div class="result-hero">
+            <div class="hero-icon">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M4.5 11l5 5 8-9" stroke="#09825d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="hero-title">Available upfront</p>
+            <p class="hero-amount">€20,000</p>
+            <p class="hero-eta" style="margin-top:6px;">Funds deposited within 24–48 hours of acceptance</p>
+          </div>
+
+          <div style="padding:28px 32px;">
+            <p class="section-label" style="margin-bottom:12px;">Breakdown</p>
+            <div class="breakdown">
+              <div class="b-row">
+                <span class="b-label">Contract value</span>
+                <span class="b-val">€20,000.00</span>
+              </div>
+              <div class="b-row">
+                <span class="b-label">Monthly fee (4.0%)</span>
+                <span class="b-val" style="color:var(--text-muted);">−€800.00</span>
+              </div>
+              <div class="b-row b-total">
+                <span class="b-label">You receive</span>
+                <span class="b-val">€19,200.00</span>
+              </div>
+            </div>
+
+            <hr class="divider" />
+
+            <p class="section-label" style="margin-bottom:12px;">Buyer repayment schedule</p>
+            <div class="buyer-row">
+              <div>
+                <p class="buyer-label">Acme Corp will be charged</p>
+                <p class="buyer-amount">€1,666.67 / month</p>
+              </div>
+              <span class="pill-green"><span>●</span> Approved — Standard Tier</span>
+            </div>
+
+            <div class="notice">
+              <svg class="notice-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <circle cx="7.5" cy="7.5" r="6" stroke="#5469d4" stroke-width="1.3"/>
+                <path d="M7.5 5v3.5M7.5 10v.5" stroke="#5469d4" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+              <p class="notice-text">By accepting, you agree to Monthly's <a href="#" style="color:var(--blue);text-decoration:underline;">funding terms</a>. Funds are non-reversible once disbursed.</p>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-secondary" onclick="goTo('screen1')">← Revise contract</button>
+              <button class="btn-primary" onclick="goTo('screen3')">Accept & Fund Contract →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ────────────────────────────────────────
+           SCREEN 3
+      ──────────────────────────────────────── -->
+      <div class="screen" id="screen3">
+        <div class="success-center">
+          <div class="success-icon">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+              <path d="M5.5 13l6 6L21 7" stroke="#09825d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="success-title">Contract Funded</p>
+          <p class="success-sub">Your payout is on the way. Funds will arrive in your linked bank account within 24–48 hours.</p>
+          <span class="amount-tag">€19,200.00 en route</span>
+
+          <div class="timeline">
+            <div class="t-step">
+              <div class="t-icon done">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                  <path d="M2.5 6.5l3 3 5-6" stroke="#09825d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="t-label">Contract uploaded</span>
+              <span class="t-badge-done">Done</span>
+            </div>
+            <div class="t-step">
+              <div class="t-icon done">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                  <path d="M2.5 6.5l3 3 5-6" stroke="#09825d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="t-label">Underwritten & approved</span>
+              <span class="t-badge-done">Done</span>
+            </div>
+            <div class="t-step">
+              <div class="t-icon done">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                  <path d="M2.5 6.5l3 3 5-6" stroke="#09825d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="t-label">Contract funded</span>
+              <span class="t-badge-done">Done</span>
+            </div>
+            <div class="t-step">
+              <div class="t-icon active">
+                <div class="pulse" style="width:8px;height:8px;background:#5469d4;border-radius:50%;"></div>
+              </div>
+              <span class="t-label active">
+                Payout transfer
+                <span class="t-sub">Estimated 24–48 hours</span>
+              </span>
+              <span class="t-badge-active">In progress</span>
+            </div>
+          </div>
+
+          <button class="btn-primary full" onclick="goTo('screen1')" style="max-width:520px;">
+            Upload another contract
+          </button>
+          <button class="btn-secondary full" style="max-width:520px;margin-top:10px;">
+            View all contracts
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  document.getElementById('topbar-s1').style.display = id === 'screen1' ? 'flex' : 'none';
+  document.getElementById('topbar-s2').style.display = id === 'screen2' ? 'flex' : 'none';
+  document.getElementById('topbar-s3').style.display = id === 'screen3' ? 'flex' : 'none';
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setFreq(btn) {
+  document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function simulateUpload(zone) {
+  document.getElementById('upload-label').textContent = 'contract_acme_2025.pdf';
+  document.getElementById('upload-hint').textContent = 'Uploaded · 142 KB · Ready for processing';
+  zone.style.borderColor = '#09825d';
+  zone.style.background = '#d3f8ee';
+  zone.querySelector('svg path').setAttribute('stroke', '#09825d');
+}
+</script>
+</body>
+</html>
